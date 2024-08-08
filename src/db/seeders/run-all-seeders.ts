@@ -3,6 +3,7 @@ import RoleSeeder from './role-seeder'
 import AccountSeeder from './account-seeder'
 import UserSeeder from './user-seeder'
 import ProfileSeeder from './profile-seeder'
+import FanpageSeeder  from './fanpage-seeder'
 import InterestSeeder from './interest-seeder'
 import UserInterestSeeder from './user-interest-seeder'
 import FriendshipSeeder from './friendship-seeder'
@@ -16,13 +17,15 @@ import ModuleSeeder from './module-seeder'
 import PermissionSeeder from './permission-seeder'
 import RoleModulePermissionSeeder from './role-module-permission-seeders'
 import AccountModulePermissionSeeder from './account-module-permission-seeder'
-
+import videoSeeder from './video-seeder'
+import storySeeder from './story-seeder'
 export default {
   async up(queryInterface: QueryInterface) {
     await RoleSeeder.up(queryInterface)
     await AccountSeeder.up(queryInterface)
     await UserSeeder.up(queryInterface)
     await ProfileSeeder.up(queryInterface)
+    await FanpageSeeder.up(queryInterface)
     await InterestSeeder.up(queryInterface)
     await UserInterestSeeder.up(queryInterface)
     await FriendshipSeeder.up(queryInterface)
@@ -36,9 +39,12 @@ export default {
     await PermissionSeeder.up(queryInterface)
     await RoleModulePermissionSeeder.up(queryInterface)
     await AccountModulePermissionSeeder.up(queryInterface)
+    await videoSeeder.up(queryInterface)
+    await storySeeder.up(queryInterface)
   },
 
   async down(queryInterface: QueryInterface) {
+    await videoSeeder.down(queryInterface)
     await AccountModulePermissionSeeder.down(queryInterface)
     await RoleModulePermissionSeeder.down(queryInterface)
     await PermissionSeeder.down(queryInterface)
@@ -52,9 +58,12 @@ export default {
     await FriendshipSeeder.down(queryInterface)
     await UserInterestSeeder.down(queryInterface)
     await InterestSeeder.down(queryInterface)
+    await FanpageSeeder.down(queryInterface)
     await ProfileSeeder.down(queryInterface)
     await UserSeeder.down(queryInterface)
     await AccountSeeder.down(queryInterface)
     await RoleSeeder.down(queryInterface)
+    await storySeeder.down(queryInterface)
+
   }
 }

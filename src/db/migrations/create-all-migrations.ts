@@ -19,6 +19,24 @@ import ModuleMigration from './create-table-module'
 import PermissionMigration from './create-table-permission'
 import AccountModulePermissionMigtation from './create-table-account-module-permission'
 import RoleModulePermissionMigration from './create-table-role-module-permission'
+import GroupMessageMigration from './create-table-groupMessage'
+import MemberGroupMigration from './create-table-memberGroup'
+import MessageMigration from './create-table-message'
+import ReactMessageMigration from './create-table-reactMessage'
+import SeenMessageMigration from './create-table-seenMessage'
+import RecallMessageMigration from './create-table-recallMessage'
+import NotifyGroupMessageMigration from './create-table-notifyGroupMessage'
+import DeleteGroupMessageMigration from './create-table-deleteGroupMessage'
+import ReportMessageMigration from './create-table-reportMessage'
+import FanpageMigration from './create-table-fanpage'
+import FanpageMemberMigration from './create-table-fanpage-member'
+import VideoMigration from './create-table-video'
+import CommnetVideoMigration from './create-table-comment-video'
+import LikeVideoMigration from './create-table-like-video'
+import FavoriteVideoMigration from './create-table-favorite-video'
+import VideoReportMigration from './create-table-video-report'
+import HashTagsVideo from './create-table-hash-tag-video'
+import StoryMigration from './create-table-story'
 
 export default {
   async up(queryInterface: QueryInterface) {
@@ -41,9 +59,43 @@ export default {
     await PermissionMigration.up(queryInterface)
     await AccountModulePermissionMigtation.up(queryInterface)
     await RoleModulePermissionMigration.up(queryInterface)
+    await GroupMessageMigration.up(queryInterface)
+    await MemberGroupMigration.up(queryInterface)
+    await MessageMigration.up(queryInterface)
+    await ReactMessageMigration.up(queryInterface)
+    await SeenMessageMigration.up(queryInterface)
+    await RecallMessageMigration.up(queryInterface)
+    await NotifyGroupMessageMigration.up(queryInterface)
+    await DeleteGroupMessageMigration.up(queryInterface)
+    await ReportMessageMigration.up(queryInterface)
+    await FanpageMigration.up(queryInterface)
+    await FanpageMemberMigration.up(queryInterface)
+    await VideoMigration.up(queryInterface)
+    await CommnetVideoMigration.up(queryInterface)
+    await LikeVideoMigration.up(queryInterface)
+    await FriendShipMigration.up(queryInterface)
+    await FavoriteVideoMigration.up(queryInterface)
+    await VideoReportMigration.up(queryInterface)
+    await HashTagsVideo.up(queryInterface)
+    await StoryMigration.up(queryInterface)
+
   },
 
   async down(queryInterface: QueryInterface) {
+     await VideoMigration.down(queryInterface)
+     await CommnetVideoMigration.down(queryInterface)
+     await LikeVideoMigration.down(queryInterface)
+     await FavoriteVideoMigration.down(queryInterface)
+     await VideoReportMigration.down(queryInterface)
+     await HashTagsVideo.down(queryInterface)
+    await ReportMessageMigration.down(queryInterface)
+    await DeleteGroupMessageMigration.down(queryInterface)
+    await NotifyGroupMessageMigration.down(queryInterface)
+    await SeenMessageMigration.down(queryInterface)
+    await ReactMessageMigration.down(queryInterface)
+    await MessageMigration.down(queryInterface)
+    await MemberGroupMigration.down(queryInterface)
+    await GroupMessageMigration.down(queryInterface)
     await RoleModulePermissionMigration.down(queryInterface)
     await AccountModulePermissionMigtation.down(queryInterface)
     await PermissionMigration.down(queryInterface)
@@ -59,9 +111,12 @@ export default {
     await FriendShipMigration.down(queryInterface)
     await UserInterestsMigration.down(queryInterface)
     await InterestMigration.down(queryInterface)
+    await FanpageMemberMigration.down(queryInterface)
+    await FanpageMigration.down(queryInterface)
     await ProfileMigration.down(queryInterface)
     await UserMigration.down(queryInterface)
     await AccountMigration.down(queryInterface)
     await RoleMigration.down(queryInterface)
+    await StoryMigration.down(queryInterface)
   }
 }
