@@ -27,7 +27,6 @@ class Middleware {
   // Xác thực token
   verifyToken(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization
-
     if (token) {
       const accessToken = token.split(' ')[1]
 
@@ -41,6 +40,7 @@ class Middleware {
               errorName: 'EXPIRED_TOKEN'
             })
           )
+
         req.user = user as UserOutput
         next()
       })
