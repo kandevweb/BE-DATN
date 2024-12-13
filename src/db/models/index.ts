@@ -1,9 +1,26 @@
+import Notification from './Notification'
+import Story from './Story'
 import User from './User'
-import Profile from './Profile'
 import Interest from './Interest'
+import Profile from './Profile'
 import Friendship from './Friendship'
+import Video, { videoRelationships } from './Video'
+import CommentVideo, { commentVideoRelationships } from './CommentVideo'
+import LikeVideo from './LikeVideo'
+import FavoriteVideos, { favoriteVideosRelationships } from './FavoriteVideos'
+import VideoReport, { videoReportRelationships } from './VideoReport'
+import HashTagsVideo, { hashTagsVideoRelationships } from './hashTagsVideo'
+import GroupMessage from './GroupMessage'
+import MemberGroup from './MemberGroup'
+import ReactMessage from './ReactMessage'
+import SeenMessage from './SeenMessage'
+import Message from './Message'
 import Role from './Role'
 import Account from './Account'
+import RecallMessage from './RecallMessage'
+import NotifyGroupMessage from './NotifyGroupMessage'
+import DeleteGroupMessage from './DeleteGroupMessage'
+import ReportMessage from './ReportMessage'
 import SearchHistory from './SearchHistory'
 import Post from './Post'
 import PostMediaResource from './PostMediaResource'
@@ -14,6 +31,7 @@ import Module from './Module'
 import Permission from './Permission'
 import AccountModulePermission from './AccountModulePermission'
 import RoleModulePermission from './RoleModulePermission'
+import Fanpage from './Fanpage';
 
 const roleRelationships = () => {
   Role.hasMany(Account, {
@@ -97,12 +115,16 @@ const permissionRelationships = () => {
   })
 }
 
+// User Relationships
 const userRelationships = () => {
   User.hasOne(Profile, {
     foreignKey: 'user_id',
     onDelete: 'CASCADE'
   })
-
+  User.hasMany(Notification, {
+    foreignKey: 'user_id',
+    as: 'notifications'
+  })
   User.belongsToMany(Interest, {
     through: 'UserInterests',
     foreignKey: 'user_id',
@@ -123,6 +145,14 @@ const userRelationships = () => {
     onDelete: 'CASCADE'
   })
 
+  User.hasMany(Story, {
+    foreignKey: 'user_id',
+    as: 'stories'})
+  User.hasMany(GroupMessage, { foreignKey: 'createdBy', as: 'GroupsMessage' })
+
+  User.hasMany(MemberGroup, {
+    foreignKey: 'user_id'
+  })
   User.hasMany(SearchHistory, {
     foreignKey: 'user_id'
   })
@@ -148,13 +178,16 @@ const userRelationships = () => {
   })
 }
 
+// Profile Relationships
 const profileRelationships = () => {
   Profile.belongsTo(User, {
     foreignKey: 'user_id',
+    targetKey: 'user_id',
     onDelete: 'CASCADE'
   })
 }
 
+// Interest Relationships
 const interestRelationships = () => {
   Interest.belongsToMany(User, {
     through: 'UserInterests',
@@ -162,7 +195,75 @@ const interestRelationships = () => {
     onDelete: 'CASCADE'
   })
 }
+// FanPage Relationships
+const fanpageRelationships = () => {
+  Fanpage.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user'
+  });
+}
 
+// Notification Relationships
+const notificationRelationships = () => {
+  Notification.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user'
+  })
+}
+
+
+// Story Relationships
+const storyRelationships = () => {
+  Story.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user'
+  })
+}
+
+
+const groupMessageRelationships = () => {
+  GroupMessage.hasMany(Message, { foreignKey: 'group_message_id', onDelete: 'cascade' })
+  GroupMessage.hasMany(MemberGroup, { foreignKey: 'group_message_id', onDelete: 'cascade' })
+  GroupMessage.hasMany(NotifyGroupMessage, { foreignKey: 'group_message_id', onDelete: 'cascade' })
+  GroupMessage.hasMany(DeleteGroupMessage, { foreignKey: 'group_message_id', onDelete: 'cascade' })
+  GroupMessage.belongsTo(User, { foreignKey: 'createdBy', as: 'Creator' })
+}
+
+const memberGroup = () => {
+  MemberGroup.belongsTo(User, { foreignKey: 'user_id' })
+  MemberGroup.belongsTo(GroupMessage, { foreignKey: 'group_message_id' })
+}
+
+const notifyGroupMessage = () => {
+  NotifyGroupMessage.belongsTo(GroupMessage, { foreignKey: 'group_message_id' })
+}
+
+const deleteGroupMessage = () => {
+  DeleteGroupMessage.belongsTo(GroupMessage, { foreignKey: 'group_message_id' })
+}
+
+const messageRelationships = () => {
+  Message.hasMany(ReactMessage, { foreignKey: 'message_id', onDelete: 'cascade' })
+  Message.hasMany(SeenMessage, { foreignKey: 'message_id', onDelete: 'cascade' })
+  Message.hasMany(RecallMessage, { foreignKey: 'message_id', onDelete: 'cascade' })
+  Message.hasMany(ReportMessage, { foreignKey: 'message_id', onDelete: 'cascade' })
+}
+
+const seenMessage = () => {
+  SeenMessage.belongsTo(Message, { foreignKey: 'message_id' })
+}
+
+const reactMessage = () => {
+  ReactMessage.belongsTo(Message, { foreignKey: 'message_id' })
+}
+
+const recallMessage = () => {
+  RecallMessage.belongsTo(Message, { foreignKey: 'message_id' })
+}
+
+const reportMessage = () => {
+  ReportMessage.belongsTo(Message, { foreignKey: 'message_id' })
+}
 const searchHistoryRelationships = () => {
   SearchHistory.belongsTo(User, {
     foreignKey: 'user_id',
@@ -264,12 +365,26 @@ const postReactionRelationships = () => {
   })
 }
 
+
 export const setupModelRelationships = () => {
   roleRelationships()
   accountRelationship()
   userRelationships()
   profileRelationships()
   interestRelationships()
+  videoRelationships()
+  commentVideoRelationships()
+  favoriteVideosRelationships()
+  videoReportRelationships()
+  hashTagsVideoRelationships()
+  messageRelationships()
+  groupMessageRelationships()
+  memberGroup()
+  seenMessage()
+  reactMessage()
+  recallMessage()
+  notifyGroupMessage()
+  reportMessage()
   searchHistoryRelationships()
   postRelationships()
   postMediaResourceRelationships()
@@ -278,6 +393,8 @@ export const setupModelRelationships = () => {
   postReactionRelationships()
   permissionRelationships()
   moduleRelationships()
+  fanpageRelationships();
+  storyRelationships()
 }
 
 const models = {
@@ -286,7 +403,23 @@ const models = {
   User,
   Profile,
   Interest,
+  Fanpage,
   Friendship,
+  Video,
+  CommentVideo,
+  LikeVideo,
+  FavoriteVideos,
+  VideoReport,
+  HashTagsVideo,
+  GroupMessage,
+  MemberGroup,
+  Message,
+  ReactMessage,
+  SeenMessage,
+  RecallMessage,
+  NotifyGroupMessage,
+  DeleteGroupMessage,
+  ReportMessage,
   SearchHistory,
   Post,
   PostMediaResource,
@@ -296,7 +429,8 @@ const models = {
   Permission,
   Module,
   AccountModulePermission,
-  RoleModulePermission
+  RoleModulePermission,
+  Story
 }
 
 export default models

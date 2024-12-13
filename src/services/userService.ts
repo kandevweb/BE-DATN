@@ -9,6 +9,7 @@ import { compareValue } from '../utils/bcrypt'
 import { hashSync } from 'bcryptjs'
 import { UserAttributes } from '../db/models/User'
 import { RELATIONSHIP } from '../constants/relationshipStatus'
+import messageSocketService from './messageSocketService'
 
 class userService {
   private userUtils = {
@@ -413,7 +414,6 @@ class userService {
   // Danh sách người dùng đã gửi kết bạn tới tôi
   async fetchAllReceivedFriendRequest(user_id: string, page: number | undefined, limit: number | undefined) {
     const offset = page && limit ? (page - 1) * limit : undefined
-
     const receivedFriendRequests = await models.Friendship.findAll({
       where: {
         friend_id: user_id,
@@ -725,7 +725,6 @@ class userService {
         status: RELATIONSHIP.BLOCKED
       }
     })
-
     if (!blockFromUser) {
       throw new CustomErrorHandler(StatusCodes.NOT_FOUND, 'Hiện đang không chặn người dùng này!')
     }
@@ -772,7 +771,27 @@ class userService {
       }
     }
   }
+  // Danh sách bị chặn
+  async fetchAllListBlockedUser(user_id: string) {
+    const blockedUserRecords = await models.Friendship.findAll({
+      where: {
+        [Op.and]: {
+          status: RELATIONSHIP.BLOCKED,
+          friend_id: user_id
+        }
+      },
+      attributes: ['user_id']
+    })
 
+    const arr = blockedUserRecords.map((item) => item.user_id)
+
+    return {
+      message: 'Danh sách chặn người dùng bị chặn',
+      data: {
+        friends: arr
+      }
+    }
+  }
   // Tìm kiếm bạn bè
   async searchFriends(user_id: string, name: string) {
     const searchName = name ? name.charAt(0).toUpperCase() + name.slice(1).toLowerCase() : ''
